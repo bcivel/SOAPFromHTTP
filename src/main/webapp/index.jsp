@@ -22,7 +22,6 @@
         byte[] bytes = envelope.getBytes(StandardCharsets.ISO_8859_1);
         envelope = new String(bytes, StandardCharsets.UTF_8);
 
-        
         MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, envelope + "|||" + envelope.length());
         
         String result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
