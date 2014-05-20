@@ -16,7 +16,7 @@
         String envelope = request.getParameter("envelope").replace("2014-04-08T14:30:00.000 01:00","2014-04-08T14:30:00.000+01:00");
 //        String servicePath = "http://prod.services.siege.red/RedouteFrance/Technical/CERBERUS/Technical/2.0?wsdl";
         String servicePath = request.getParameter("servicePath");
-//String method = "ExecuteSQLRequest_1.0";
+//        String method = "ExecuteSQLRequest_1.0";
         String method = request.getParameter("method");
         
         byte[] bytes = envelope.getBytes(StandardCharsets.ISO_8859_1);
