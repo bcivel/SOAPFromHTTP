@@ -1,4 +1,3 @@
-<%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.net.URLDecoder"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.soapfromhttp.log.MyLogger"%>
