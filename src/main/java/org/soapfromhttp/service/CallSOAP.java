@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,9 +72,15 @@ public class CallSOAP {
 
                 soapConnection.close();
 
-            } catch (    SOAPException | IOException | SAXException | ParserConfigurationException e) {
+            } catch (SOAPException e){  
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
-            }
+            } catch (IOException e) {
+                MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
+            } catch (ParserConfigurationException e) {
+                MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
+            } catch (SAXException e) {
+                MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
+            } 
         }
         return result;
     }
