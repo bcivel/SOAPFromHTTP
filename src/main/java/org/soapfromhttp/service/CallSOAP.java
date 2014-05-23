@@ -57,6 +57,8 @@ public class CallSOAP {
                         .newInstance();
                 soapConnection = soapConnectionFactory.createConnection();
 
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection opened");
+                
                 // Création de la requete SOAP
                 SOAPMessage input = createSOAPRequest(envelope, method);
 
@@ -69,7 +71,6 @@ public class CallSOAP {
                 
                 result = out.toString();
 
-                soapConnection.close();
 
             } catch (SOAPException e){  
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
@@ -81,9 +82,14 @@ public class CallSOAP {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
             }
             finally{
-                try {    
+                try {
+                    if (soapConnection != null) {
                     soapConnection.close();
+                    }
+                    if (out != null) {
                     out.close();
+                    }
+                    MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection and ByteArray closed");
                 } catch (SOAPException ex) {
                     Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -121,23 +127,28 @@ public class CallSOAP {
 
         final SOAPBody soapBody = soapMessage.getSOAPBody();
 
-        MyLogger.log(CallSOAP.class.getName(), Level.INFO, soapBody.toString());
         // convert String into InputStream - traitement des caracères escapés > < ... (contraintes de l'affichage IHM)
         //InputStream is = new ByteArrayInputStream(HtmlUtils.htmlUnescape(pBody).getBytes());
         InputStream is = new ByteArrayInputStream(pBody.getBytes());
+        DocumentBuilder builder = null;
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         
         // Important à laisser sinon KO
         builderFactory.setNamespaceAware(true);
         try {
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            builder = builderFactory.newDocumentBuilder();
 
             Document document = builder.parse(is);
 
             soapBody.addDocument(document);
         } catch (ParserConfigurationException e) {
             MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
+        } finally{
+            is.close();
+        if (builder != null) {
+            builder.reset();
+        }
         }
         soapMessage.saveChanges();
 
