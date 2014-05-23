@@ -50,7 +50,7 @@ public class CallSOAP {
         if (envelope != null && servicePath != null && method != null) {
             
             SOAPConnectionFactory soapConnectionFactory;
-            SOAPConnection soapConnection;
+            SOAPConnection soapConnection = null;
             try {
                 soapConnectionFactory = SOAPConnectionFactory
                         .newInstance();
@@ -80,7 +80,14 @@ public class CallSOAP {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
             } catch (SAXException e) {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
-            } 
+            }
+            finally{
+                try {    
+                    soapConnection.close();
+                } catch (SOAPException ex) {
+                    Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
+        }
         }
         return result;
     }
