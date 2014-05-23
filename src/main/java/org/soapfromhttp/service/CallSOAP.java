@@ -46,6 +46,7 @@ public class CallSOAP {
      */
     public String calculatePropertyFromSOAPResponse(final String envelope, final String servicePath, final String method) {
         String result = null;
+        ByteArrayOutputStream out = null;
         // Test des inputs nécessaires.
         if (envelope != null && servicePath != null && method != null) {
             
@@ -62,9 +63,7 @@ public class CallSOAP {
                 // Appel du WS
                 SOAPMessage soapResponse = soapConnection.call(input, servicePath);
                 
-                DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = builderFactory.newDocumentBuilder();
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                out = new ByteArrayOutputStream();
 
                 soapResponse.writeTo(out);
                 
@@ -84,7 +83,10 @@ public class CallSOAP {
             finally{
                 try {    
                     soapConnection.close();
+                    out.close();
                 } catch (SOAPException ex) {
+                    Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
         }
