@@ -53,22 +53,25 @@ public class CallSOAP {
             SOAPConnectionFactory soapConnectionFactory;
             SOAPConnection soapConnection = null;
             try {
-                soapConnectionFactory = SOAPConnectionFactory
-                        .newInstance();
+                soapConnectionFactory = SOAPConnectionFactory.newInstance();
                 soapConnection = soapConnectionFactory.createConnection();
-
                 MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection opened");
                 
                 // Création de la requete SOAP
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Create request");
                 SOAPMessage input = createSOAPRequest(envelope, method);
 
                 // Appel du WS
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Calling WS");
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Input :"+input);
                 SOAPMessage soapResponse = soapConnection.call(input, servicePath);
+                
                 
                 out = new ByteArrayOutputStream();
 
                 soapResponse.writeTo(out);
-                
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "WS response received");
+                MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, "WS response : "+out.toString());
                 result = out.toString();
 
 
