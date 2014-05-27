@@ -31,9 +31,32 @@
         
         
         MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, envelope + "|||" + envelope.length());
-        
-        String result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
-        MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, result.toString());
+
+        String result;
+        try {
+            result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            out.println("servicePath");
+            out.println(servicePath);
+            out.println("method");
+            out.println(method);
+            out.println("envelope");
+            out.println(envelope);
+            result = "ERROR";
+        }
+        catch (Throwable t) {
+            result = "ERROR";
+            t.printStackTrace();
+            out.println("servicePath");
+            out.println(servicePath);
+            out.println("method");
+            out.println(method);
+            out.println("envelope");
+            out.println(envelope);
+        }
+        MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, result);
         %>
         <%=result%>
      
