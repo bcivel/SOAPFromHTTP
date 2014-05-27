@@ -18,11 +18,12 @@
         
         Calendar calendar=Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00.000+Z");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00.000 Z");
 
-        String envelope = envelope2.replace("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
+        String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
         calendar.add(Calendar.DATE, 7);
-        envelope = envelope.replace("##DATE_LIVRAISON##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
+        envelope2 = envelope;
+        envelope = envelope2.replaceAll("##DATE_LIVRAISON##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
         String servicePath = "http://re7fonc.servicespms.siege.red/RedouteFrance/Sell/ShoppingCart/2.0?wsdl";
 //        String servicePath = request.getParameter("servicePath");
         String method = "SaveOrder_1.0";
