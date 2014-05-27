@@ -46,31 +46,34 @@ public class CallSOAP {
      */
     public String calculatePropertyFromSOAPResponse(final String envelope, final String servicePath, final String method) {
         String result = null;
+        ByteArrayOutputStream out = null;
         // Test des inputs nécessaires.
         if (envelope != null && servicePath != null && method != null) {
             
             SOAPConnectionFactory soapConnectionFactory;
-            SOAPConnection soapConnection;
+            SOAPConnection soapConnection = null;
             try {
-                soapConnectionFactory = SOAPConnectionFactory
-                        .newInstance();
+                soapConnectionFactory = SOAPConnectionFactory.newInstance();
                 soapConnection = soapConnectionFactory.createConnection();
-
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection opened");
+                
                 // Création de la requete SOAP
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Create request");
                 SOAPMessage input = createSOAPRequest(envelope, method);
 
                 // Appel du WS
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Calling WS");
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Input :"+input);
                 SOAPMessage soapResponse = soapConnection.call(input, servicePath);
                 
-                DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = builderFactory.newDocumentBuilder();
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                
+                out = new ByteArrayOutputStream();
 
                 soapResponse.writeTo(out);
-                
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "WS response received");
+                MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, "WS response : "+out.toString());
                 result = out.toString();
 
-                soapConnection.close();
 
             } catch (SOAPException e){  
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
@@ -80,7 +83,22 @@ public class CallSOAP {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
             } catch (SAXException e) {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
-            } 
+            }
+            finally{
+                try {
+                    if (soapConnection != null) {
+                    soapConnection.close();
+                    }
+                    if (out != null) {
+                    out.close();
+                    }
+                    MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection and ByteArray closed");
+                } catch (SOAPException ex) {
+                    Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
+        }
         }
         return result;
     }
@@ -112,23 +130,28 @@ public class CallSOAP {
 
         final SOAPBody soapBody = soapMessage.getSOAPBody();
 
-        MyLogger.log(CallSOAP.class.getName(), Level.INFO, soapBody.toString());
         // convert String into InputStream - traitement des caracères escapés > < ... (contraintes de l'affichage IHM)
         //InputStream is = new ByteArrayInputStream(HtmlUtils.htmlUnescape(pBody).getBytes());
         InputStream is = new ByteArrayInputStream(pBody.getBytes());
+        DocumentBuilder builder = null;
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         
         // Important à laisser sinon KO
         builderFactory.setNamespaceAware(true);
         try {
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            builder = builderFactory.newDocumentBuilder();
 
             Document document = builder.parse(is);
 
             soapBody.addDocument(document);
         } catch (ParserConfigurationException e) {
             MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
+        } finally{
+            is.close();
+        if (builder != null) {
+            builder.reset();
+        }
         }
         soapMessage.saveChanges();
 
