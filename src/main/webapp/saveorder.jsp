@@ -18,7 +18,7 @@
         
         Calendar calendar=Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00.000 Z");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00.000+Z");
 
         String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
         calendar.add(Calendar.DATE, 7);
@@ -32,20 +32,18 @@
         
         MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, envelope + "|||" + envelope.length());
 
-        String result;
+        String result = "";
         try {
             result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
         }
         catch(Exception ex) {
             result = "ERROR";
             ex.printStackTrace();
-            result += "servicePath "+servicePath;
-            result += "method "+method;
-            result += "envelope "+envelope;
         }
         catch (Throwable t) {
             result = "ERROR";
             t.printStackTrace();
+        } finally {
             result += "servicePath "+servicePath;
             result += "method "+method;
             result += "envelope "+envelope;
