@@ -37,7 +37,7 @@
             result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
         }
         catch(Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             %>servicePath<%=servicePath%><%
             %>method<%=method%><%
             %>envelope<%=envelope%><%
@@ -45,7 +45,7 @@
             result = "ERROR";
         }
         catch (Throwable t) {
-            t.printStackTrace();
+            //t.printStackTrace();
             %>servicePath<%=servicePath%><%
             %>method<%=method%><%
             %>envelope<%=envelope%><%
