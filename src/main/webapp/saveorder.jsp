@@ -18,7 +18,7 @@
         
         Calendar calendar=Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00.000+Z");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("H:m:00Z");
 
         String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime()));
         calendar.add(Calendar.DATE, 7);
