@@ -38,23 +38,19 @@
         }
         catch(Exception ex) {
             ex.printStackTrace();
-            out.println("servicePath");
-            out.println(servicePath);
-            out.println("method");
-            out.println(method);
-            out.println("envelope");
-            out.println(envelope);
+            %>servicePath<%=servicePath%><%
+            %>method<%=method%><%
+            %>envelope<%=envelope%><%
+
             result = "ERROR";
         }
         catch (Throwable t) {
-            result = "ERROR";
             t.printStackTrace();
-            out.println("servicePath");
-            out.println(servicePath);
-            out.println("method");
-            out.println(method);
-            out.println("envelope");
-            out.println(envelope);
+            %>servicePath<%=servicePath%><%
+            %>method<%=method%><%
+            %>envelope<%=envelope%><%
+
+            result = "ERROR";
         }
         MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, result);
         %>
