@@ -20,7 +20,9 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import org.apache.log4j.Level;
 import org.soapfromhttp.log.MyLogger;
@@ -118,10 +120,15 @@ public class CallSOAP {
 
         // Précise la version du protocole SOAP à utiliser (nécessaire pour les appels de WS Externe)
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        
+
         SOAPMessage soapMessage = messageFactory.createMessage();
 
         MimeHeaders headers = soapMessage.getMimeHeaders();
+
+        SOAPEnvelope sOAPEnvelope = soapMessage.getSOAPPart().getEnvelope();
+
+        SOAPHeader sOAPHeader = sOAPEnvelope.addHeader();
+        sOAPHeader.addChildElement("xmlns", "ns", "http://RedouteFrance/Sell/ShoppingCart/2.0/SaveOrder/1.0");
 
         // Précise la méthode du WSDL à interroger
         headers.addHeader("SOAPAction", method);
