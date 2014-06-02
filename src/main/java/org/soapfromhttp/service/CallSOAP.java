@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.soapfromhttp.service;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +33,7 @@ import org.xml.sax.SAXException;
  */
 @Service
 public class CallSOAP {
-  
+
     /**
      * Calcule d'une propriété depuis une requête SOAP.
      *
@@ -49,33 +48,31 @@ public class CallSOAP {
         ByteArrayOutputStream out = null;
         // Test des inputs nécessaires.
         if (envelope != null && servicePath != null && method != null) {
-            
+
             SOAPConnectionFactory soapConnectionFactory;
             SOAPConnection soapConnection = null;
             try {
                 soapConnectionFactory = SOAPConnectionFactory.newInstance();
                 soapConnection = soapConnectionFactory.createConnection();
                 MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection opened");
-                
+
                 // Création de la requete SOAP
                 MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Create request");
                 SOAPMessage input = createSOAPRequest(envelope, method);
 
                 // Appel du WS
                 MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Calling WS");
-                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Input :"+input);
+                MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Input :" + input);
                 SOAPMessage soapResponse = soapConnection.call(input, servicePath);
-                
-                
+
                 out = new ByteArrayOutputStream();
 
                 soapResponse.writeTo(out);
                 MyLogger.log(CallSOAP.class.getName(), Level.INFO, "WS response received");
-                MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, "WS response : "+out.toString());
+                MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, "WS response : " + out.toString());
                 result = out.toString();
 
-
-            } catch (SOAPException e){  
+            } catch (SOAPException e) {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
             } catch (IOException e) {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
@@ -83,14 +80,13 @@ public class CallSOAP {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
             } catch (SAXException e) {
                 MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
-            }
-            finally{
+            } finally {
                 try {
                     if (soapConnection != null) {
-                    soapConnection.close();
+                        soapConnection.close();
                     }
                     if (out != null) {
-                    out.close();
+                        out.close();
                     }
                     MyLogger.log(CallSOAP.class.getName(), Level.INFO, "Connection and ByteArray closed");
                 } catch (SOAPException ex) {
@@ -98,7 +94,7 @@ public class CallSOAP {
                 } catch (IOException ex) {
                     Logger.getLogger(CallSOAP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
-        }
+            }
         }
         return result;
     }
@@ -118,7 +114,7 @@ public class CallSOAP {
 
         // Précise la version du protocole SOAP à utiliser (nécessaire pour les appels de WS Externe)
         MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        
+
         SOAPMessage soapMessage = messageFactory.createMessage();
 
         MimeHeaders headers = soapMessage.getMimeHeaders();
@@ -136,7 +132,7 @@ public class CallSOAP {
         DocumentBuilder builder = null;
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        
+
         // Important à laisser sinon KO
         builderFactory.setNamespaceAware(true);
         try {
@@ -147,11 +143,11 @@ public class CallSOAP {
             soapBody.addDocument(document);
         } catch (ParserConfigurationException e) {
             MyLogger.log(CallSOAP.class.getName(), Level.ERROR, e.toString());
-        } finally{
+        } finally {
             is.close();
-        if (builder != null) {
-            builder.reset();
-        }
+            if (builder != null) {
+                builder.reset();
+            }
         }
         soapMessage.saveChanges();
 
