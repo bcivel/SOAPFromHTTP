@@ -44,9 +44,6 @@
             result = "ERROR";
             t.printStackTrace();
         } finally {
-            result += "servicePath "+servicePath;
-            result += "method "+method;
-            result += "envelope "+envelope;
         }
         MyLogger.log(CallSOAP.class.getName(), Level.DEBUG, result);
         %>
