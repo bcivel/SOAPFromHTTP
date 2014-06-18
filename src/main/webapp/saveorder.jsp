@@ -32,6 +32,9 @@
         String result = "";
         try {
             result = soapCall.calculatePropertyFromSOAPResponse(envelope, servicePath, method);
+            if(result == null) {
+                result = "ERROR"+envelope;
+            }
         }
         catch(Exception ex) {
             result = "ERROR";
