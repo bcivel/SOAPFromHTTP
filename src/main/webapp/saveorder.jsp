@@ -17,9 +17,14 @@
         String offerid=request.getParameter("offerid");
         String amount=request.getParameter("amount");
         String wsdl=request.getParameter("wsdl");
+        String dday= request.getParameter("dday");
         
         if(offerid == null || "".equals(offerid.trim())) {
             offerid="20227039";
+        }
+        
+        if (dday == null || "".equals(dday.trim())){
+            dday="0";
         }
         
         if(amount == null || "".equals(amount.trim())) {
@@ -36,6 +41,8 @@
         Calendar calendar=Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+        
+        calendar.add(Calendar.DATE, Integer.valueOf(dday));  // number of days to add
 
         String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime())+":01.452+02:00");
         calendar.add(Calendar.DATE, 2);
