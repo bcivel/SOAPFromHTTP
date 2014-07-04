@@ -18,6 +18,7 @@
         String amount=request.getParameter("amount");
         String wsdl=request.getParameter("wsdl");
         String dday= request.getParameter("dday");
+        String oday= request.getParameter("oday");
         
         if(offerid == null || "".equals(offerid.trim())) {
             offerid="20227039";
@@ -25,6 +26,10 @@
         
         if (dday == null || "".equals(dday.trim())){
             dday="0";
+        }
+        
+        if (oday == null || "".equals(oday.trim())){
+            oday="0";
         }
         
         if(amount == null || "".equals(amount.trim())) {
@@ -44,6 +49,7 @@
         
         Calendar calendarLivraison = calendar;
         calendarLivraison.add(Calendar.DATE, Integer.valueOf(dday));  // number of days to add
+        calendar.add(Calendar.DATE, Integer.valueOf(oday));  // number of days to add
 
         String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime())+":01.452+02:00");
         calendar.add(Calendar.DATE, 2);
