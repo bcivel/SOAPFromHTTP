@@ -42,12 +42,13 @@
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
         
-        calendar.add(Calendar.DATE, Integer.valueOf(dday));  // number of days to add
+        Calendar calendarLivraison = calendar;
+        calendarLivraison.add(Calendar.DATE, Integer.valueOf(dday));  // number of days to add
 
         String envelope = envelope2.replaceAll("##DATE_JOUR##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime())+":01.452+02:00");
         calendar.add(Calendar.DATE, 2);
         envelope2 = envelope;
-        envelope = envelope2.replaceAll("##DATE_LIVRAISON##",dateFormat.format(calendar.getTime())+"T"+hourFormat.format(calendar.getTime())+":01");
+        envelope = envelope2.replaceAll("##DATE_LIVRAISON##",dateFormat.format(calendarLivraison.getTime())+"T"+hourFormat.format(calendarLivraison.getTime())+":01");
         String servicePath = wsdl;
         String method = "SaveOrder_1.0";
         
